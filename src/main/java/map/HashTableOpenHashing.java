@@ -1,11 +1,14 @@
 package map;
 
 public class HashTableOpenHashing implements Map {
-    // Add instance variables - TODO
+    // Add instance variables -
+    private LinkedList<HashEntry>[] hashTable; // array of linked-lists
+    private int numEntries; // number of entries in hashTable
 
     public HashTableOpenHashing(int n) {
         // FILL IN CODE
-
+        this.hashTable = new LinkedList[n];
+        this.numEntries = 0;
     }
     /** Return true if the map contains a (key, value) pair associated with this key,
      *  otherwise return false.
