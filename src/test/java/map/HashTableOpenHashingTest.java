@@ -33,4 +33,36 @@ public class HashTableOpenHashingTest extends TestCase {
         assertEquals(hash1, hash1);
     }
 
+    @Test
+    public void testPut() {
+        Map map = new HashTableOpenHashing(11);
+        map.put("one", "uno");
+        map.put("two", "do");
+        map.put("three", "tres");
+        map.put("four", "cuantro");
+        map.put("five", "cinco");
+        map.put("six", "seis");
+        System.out.println(map); // tests toString()
+    }
+
+    @Test
+    public void testGet() {
+        Map map = new HashTableOpenHashing(11);
+        map.put("one", "uno");
+        map.put("two", "do");
+        map.put("three", "tres");
+        map.put("four", "cuatro");
+        map.put("five", "cinco");
+        map.put("six", "seis");
+
+        assertEquals("uno", map.get("one"));
+        assertEquals("do", map.get("two"));
+        assertEquals("tres", map.get("three"));
+        assertEquals("cuatro", map.get("four"));
+        assertEquals("cinco", map.get("five"));
+        assertEquals("seis", map.get("six"));
+        assertNull(map.get("seven"));
+        assertNotSame("seis", map.get("one"));
+        System.out.println("All tests passed for get :)");
+    }
 }

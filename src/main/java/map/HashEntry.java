@@ -2,10 +2,13 @@ package map;
 
 /** An entry in the hash table. Stores a key, a corresponding value and a boolean flag */
 public class HashEntry {
+    public HashEntry next;
     private String key;
     private Object value;
     private boolean deleted; // if there was previously a value here that was later deleted.
-
+    public String toString() {
+        return key + ", " + value + ", " + deleted;
+    }
     /**
      * Constructor for class HashEntry
      * @param key key

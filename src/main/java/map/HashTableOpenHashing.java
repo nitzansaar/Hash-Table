@@ -32,6 +32,20 @@ public class HashTableOpenHashing implements Map {
      */
     public void put(String key, Object value) {
         // FILL IN CODE
+        if (key == null) {
+            throw new IllegalArgumentException("Invalid key");
+        }
+        BigInteger hashVal = polyHash(key);
+        BigInteger len = new BigInteger(String.valueOf(hashTable.length));
+        // now we determine where to store
+        BigInteger index = hashVal.mod(len);
+        // now we store the object in the correct index in the array of linked lists
+        HashEntry entry = new HashEntry(key, value);
+
+        if (hashTable[index.intValue()] == null) { // if the index is null, we need to create a new linked-list for that index
+            hashTable[index.intValue()] = new LinkedList<>();
+        }
+        hashTable[index.intValue()].insert(entry);
     }
 
     /** Return the value associated with the given key or null, if the map does not contain the key.
@@ -42,7 +56,25 @@ public class HashTableOpenHashing implements Map {
      */
     public Object get(String key) {
         // FILL IN CODE
+        if (key == null) {
+            throw new IllegalArgumentException("Invalid key");
+        }
+        BigInteger hashVal = polyHash(key);
+        BigInteger len = new BigInteger(String.valueOf(hashTable.length));
+        BigInteger index = hashVal.mod(len);
 
+        LinkedList<HashEntry> list = hashTable[index.intValue()];
+        if (list == null) {
+            return null;
+        }
+
+        LinkedList<HashEntry>.Node currentNode = list.head;
+        while (currentNode != null) {
+            if (currentNode.value.getKey().equals(key)) {
+                return currentNode.value.getValue();
+            }
+            currentNode = currentNode.next;
+        }
         return null;
     }
 
@@ -69,8 +101,25 @@ public class HashTableOpenHashing implements Map {
 
     public String toString() {
         // FILL IN CODE
-
-        return "";
+        StringBuilder sb = new StringBuilder();
+        // go through the hashTable and append each hashEntry to sb
+        for (int i = 0; i < hashTable.length; i++) {
+            sb.append(i + ": ");
+            if (hashTable[i] != null) {
+                LinkedList<HashEntry>.Node curr = hashTable[i].head;
+                while (curr != null) {
+                    sb.append("(" + curr.value.toString() + ")");
+                    curr = curr.next;
+                    if (curr != null) {
+                        sb.append(", ");
+                    }
+                }
+            } else {
+                sb.append("null");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
     // Add may implement other helper methods as needed
@@ -78,7 +127,7 @@ public class HashTableOpenHashing implements Map {
     /* Polynomial hash helper method */
     static BigInteger polyHash(String key) {
         int degree = key.length() - 1;
-        int a = 33;
+        int a = 33; // other good values are 37, 39
         BigInteger res = BigInteger.valueOf(0);
         for (int i = 0; i < key.length(); i++) {
             BigInteger temp = BigInteger.valueOf(key.charAt(i));
