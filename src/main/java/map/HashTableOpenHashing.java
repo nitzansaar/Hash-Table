@@ -1,5 +1,7 @@
 package map;
 
+import java.math.BigInteger;
+
 public class HashTableOpenHashing implements Map {
     // Add instance variables -
     private LinkedList<HashEntry>[] hashTable; // array of linked-lists
@@ -72,4 +74,18 @@ public class HashTableOpenHashing implements Map {
     }
 
     // Add may implement other helper methods as needed
+
+    /* Polynomial hash helper method */
+    static BigInteger polyHash(String key) {
+        int degree = key.length() - 1;
+        int a = 33;
+        BigInteger res = BigInteger.valueOf(0);
+        for (int i = 0; i < key.length(); i++) {
+            BigInteger temp = BigInteger.valueOf(key.charAt(i));
+            BigInteger power = BigInteger.valueOf(a).pow(degree);
+            res = res.add(temp.multiply(power));
+            degree--;
+        }
+        return res;
+    }
 }
