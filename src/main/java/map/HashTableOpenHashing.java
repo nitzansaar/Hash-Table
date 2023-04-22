@@ -49,24 +49,58 @@ public class HashTableOpenHashing implements Map {
      * @param key
      * @param value associated value
      */
+    /*
+    Before inserting a new entry, check the load factor which is equal to the number of entries
+divided by the maximum size of the table. If the load factor is greater than 0.6, allocate a
+new array whose size is the smallest prime number that is larger than 2*max_size.
+     */
     public void put(String key, Object value) {
-        // FILL IN CODE
         if (key == null) {
             throw new IllegalArgumentException("Invalid key");
         }
-        numEntries++;
+
+        double loadFactor = (double) numEntries / hashTable.length;
+
+        if (loadFactor > 0.6) {
+            // get the smallest prime number larger than 2 * max_size
+            int newSize = nextPrime(2 * hashTable.length);
+
+            // allocate a new array
+            LinkedList<HashEntry>[] newHashTable = new LinkedList[newSize];
+
+            // rehash the entries from the old table to the new table
+            for (int i = 0; i < hashTable.length; i++) {
+                if (hashTable[i] != null) {
+                    LinkedList<HashEntry>.Node currentNode = hashTable[i].head;
+                    while (currentNode != null) {
+                        HashEntry entry = currentNode.value;
+                        BigInteger hashVal = polyHash(entry.getKey());
+                        BigInteger len = new BigInteger(String.valueOf(newHashTable.length));
+                        BigInteger index = hashVal.mod(len);
+
+                        if (newHashTable[index.intValue()] == null) {
+                            newHashTable[index.intValue()] = new LinkedList<>();
+                        }
+                        newHashTable[index.intValue()].insert(entry);
+                        currentNode = currentNode.next;
+                    }
+                }
+            }
+            hashTable = newHashTable;
+        }
+
         BigInteger hashVal = polyHash(key);
         BigInteger len = new BigInteger(String.valueOf(hashTable.length));
-        // now we determine where to store
         BigInteger index = hashVal.mod(len);
-        // now we store the object in the correct index in the array of linked lists
         HashEntry entry = new HashEntry(key, value);
 
-        if (hashTable[index.intValue()] == null) { // if the index is null, we need to create a new linked-list for that index
+        if (hashTable[index.intValue()] == null) {
             hashTable[index.intValue()] = new LinkedList<>();
         }
         hashTable[index.intValue()].insert(entry);
+        numEntries++;
     }
+
 
     /** Return the value associated with the given key or null, if the map does not contain the key.
      * If the key is null, throw IllegalArgumentException.
@@ -121,15 +155,14 @@ public class HashTableOpenHashing implements Map {
         LinkedList<HashEntry>.Node prevNode = null;
         while (currNode != null) {
             if (currNode.value.getKey().equals(key)) {
-                // Key found, remove the entry
+                // key found, remove the entry
                 if (prevNode == null) {
-                    // The entry to be removed is the first one in the list
                     list.head = currNode.next;
                 } else {
                     prevNode.next = currNode.next;
                 }
                 numEntries--;
-                return currNode.value.getValue(); // Return the removed value
+                return currNode.value.getValue();
             }
             prevNode = currNode;
             currNode = currNode.next;
@@ -144,7 +177,6 @@ public class HashTableOpenHashing implements Map {
     public int size() {
         // FILL IN CODE
         return numEntries;
-
     }
 
     public String toString() {
@@ -173,7 +205,7 @@ public class HashTableOpenHashing implements Map {
     // Add may implement other helper methods as needed
 
     /* Polynomial hash helper method */
-    static BigInteger polyHash(String key) {
+    private BigInteger polyHash(String key) {
         int degree = key.length() - 1;
         int a = 33; // other good values are 37, 39
         BigInteger res = BigInteger.valueOf(0);
@@ -185,4 +217,23 @@ public class HashTableOpenHashing implements Map {
         }
         return res;
     }
+    private int nextPrime(int num) {
+        while (!isPrime(num)) {
+            num++;
+        }
+        return num;
+    }
+
+    private boolean isPrime(int num) {
+        if (num <= 1) {
+            return false;
+        }
+        for (int i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

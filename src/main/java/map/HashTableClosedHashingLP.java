@@ -4,9 +4,13 @@ package map;
  *  uses linear probing to resolve collisions */
 public class HashTableClosedHashingLP implements Map {
     // Add instance variables - TODO
+    private int numEntries;
+    private HashEntry[] hashTable;
 
     public HashTableClosedHashingLP(int n) {
         // FILL IN CODE
+        this.hashTable = new HashEntry[n];
+        this.numEntries = 0;
 
     }
 
