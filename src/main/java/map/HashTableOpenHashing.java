@@ -20,6 +20,25 @@ public class HashTableOpenHashing implements Map {
      */
     public boolean containsKey(String key) {
         // FILL IN CODE
+        if (key == null) {
+            throw new IllegalArgumentException("Invalid key");
+        }
+        BigInteger hashVal = polyHash(key);
+        BigInteger len = new BigInteger(String.valueOf(hashTable.length));
+        BigInteger index = hashVal.mod(len);
+
+        LinkedList<HashEntry> list = hashTable[index.intValue()];
+        if (list == null) {
+            return false;
+        }
+
+        LinkedList<HashEntry>.Node currentNode = list.head;
+        while (currentNode != null) {
+            if (currentNode.value.getKey().equals(key)) {
+                return true;
+            }
+            currentNode = currentNode.next;
+        }
         return false;
     }
 
@@ -65,7 +84,7 @@ public class HashTableOpenHashing implements Map {
 
         LinkedList<HashEntry> list = hashTable[index.intValue()];
         if (list == null) {
-            return null;
+            return null; // map does not contain key
         }
 
         LinkedList<HashEntry>.Node currentNode = list.head;
@@ -85,7 +104,6 @@ public class HashTableOpenHashing implements Map {
      */
     public Object remove(String key) {
         // FILL IN CODE
-
         return null;
     }
 

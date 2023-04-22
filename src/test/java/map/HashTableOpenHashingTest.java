@@ -1,7 +1,6 @@
 package map;
 
 import junit.framework.TestCase;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigInteger;
@@ -42,7 +41,7 @@ public class HashTableOpenHashingTest extends TestCase {
         map.put("four", "cuantro");
         map.put("five", "cinco");
         map.put("six", "seis");
-        System.out.println(map); // tests toString()
+        System.out.println(map.toString()); // tests toString()
     }
 
     @Test
