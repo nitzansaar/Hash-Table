@@ -30,6 +30,8 @@ public class HashTableOpenHashingTest extends TestCase {
         assertNotSame(hash1, hash2);
         assertNotSame(hash1, hash4);
         assertEquals(hash1, hash1);
+        System.out.println("All tests passed for polyHash :)");
+
     }
 
     @Test
@@ -62,6 +64,53 @@ public class HashTableOpenHashingTest extends TestCase {
         assertEquals("seis", map.get("six"));
         assertNull(map.get("seven"));
         assertNotSame("seis", map.get("one"));
-        System.out.println("All tests passed for get :)");
+        System.out.println("\nAll tests passed for get :)");
+    }
+
+    @Test
+    public void testSize() {
+        HashTableOpenHashing table = new HashTableOpenHashing(10);
+
+        table.put("one", 1);
+        table.put("two", 2);
+        table.put("three", 3);
+
+        int expectedSize = 3;
+        assertEquals(expectedSize, table.size());
+
+        table.put("four", 4);
+        expectedSize = 4;
+        assertEquals(expectedSize, table.size());
+
+        table.remove("four");
+        assertNotSame(table.size(), expectedSize);
+
+        System.out.println("\nAll tests passed for size :)");
+
+    }
+
+    @Test
+    public void testRemove() {
+        HashTableOpenHashing table = new HashTableOpenHashing(10);
+
+        table.put("one", 1);
+        table.put("two", 2);
+        table.put("three", 3);
+
+        Object removedValue = table.remove("two");
+        assertEquals(2, removedValue);
+        assertFalse(table.containsKey("two"));
+
+        removedValue = table.remove("one");
+        assertEquals(1, removedValue);
+        assertFalse(table.containsKey("one"));
+
+        removedValue = table.remove("nonexistent_key");
+        assertNull(removedValue);
+
+        int expectedSize = 1;
+        assertEquals(expectedSize, table.size());
+        System.out.println("\nAll tests passed for remove :)");
+
     }
 }

@@ -23,13 +23,12 @@ public class LinkedList<H> {
     // insert node in front of LL
     public void insert(H value) {
         Node newNode = new Node(value);
-        if (head == null) {
-            head = newNode;
-        } else {
+        if (head != null) {
             newNode.next = head;
-            head = newNode;
         }
+        head = newNode;
     }
+
 
 
 }

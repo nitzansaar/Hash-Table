@@ -54,6 +54,7 @@ public class HashTableOpenHashing implements Map {
         if (key == null) {
             throw new IllegalArgumentException("Invalid key");
         }
+        numEntries++;
         BigInteger hashVal = polyHash(key);
         BigInteger len = new BigInteger(String.valueOf(hashTable.length));
         // now we determine where to store
@@ -104,6 +105,35 @@ public class HashTableOpenHashing implements Map {
      */
     public Object remove(String key) {
         // FILL IN CODE
+        if (key == null) {
+            throw new IllegalArgumentException("Invalid key");
+        }
+        BigInteger hashVal = polyHash(key);
+        BigInteger len = new BigInteger(String.valueOf(hashTable.length));
+        BigInteger index = hashVal.mod(len);
+
+        LinkedList<HashEntry> list = hashTable[index.intValue()];
+        if (list == null) {
+            return null; // map does not contain key
+        }
+
+        LinkedList<HashEntry>.Node currNode = list.head;
+        LinkedList<HashEntry>.Node prevNode = null;
+        while (currNode != null) {
+            if (currNode.value.getKey().equals(key)) {
+                // Key found, remove the entry
+                if (prevNode == null) {
+                    // The entry to be removed is the first one in the list
+                    list.head = currNode.next;
+                } else {
+                    prevNode.next = currNode.next;
+                }
+                numEntries--;
+                return currNode.value.getValue(); // Return the removed value
+            }
+            prevNode = currNode;
+            currNode = currNode.next;
+        }
         return null;
     }
 
@@ -113,8 +143,8 @@ public class HashTableOpenHashing implements Map {
      */
     public int size() {
         // FILL IN CODE
+        return numEntries;
 
-        return 0;
     }
 
     public String toString() {
