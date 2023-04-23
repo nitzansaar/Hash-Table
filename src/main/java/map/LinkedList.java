@@ -6,14 +6,14 @@ package map;
 /** A custom LinkedList class to be used in the open hashing / separate chaining implementation
  * of a hash table. You need class Node too.
  */
-public class LinkedList<H> {
+public class LinkedList<Type> {
 
     // FILL IN CODE
     public class Node {
-        H value;
+        Type value;
         Node next = null;
 
-        public Node(H value) {
+        public Node(Type value) {
             this.value = value;
         }
     }
@@ -21,7 +21,7 @@ public class LinkedList<H> {
     Node head = null;
 
     // insert node in front of LL
-    public void insert(H value) {
+    public void insert(Type value) {
         Node newNode = new Node(value);
         if (head != null) {
             newNode.next = head;

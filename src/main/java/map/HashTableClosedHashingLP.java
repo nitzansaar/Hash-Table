@@ -24,6 +24,20 @@ public class HashTableClosedHashingLP implements Map {
      */
     public boolean containsKey(String key) {
         // FILL IN CODE
+        if (key == null) {
+            throw new IllegalArgumentException("Invalid key");
+        }
+
+        BigInteger hashVal = polyHash(key);
+        BigInteger len = new BigInteger(String.valueOf(hashTable.length));
+        int index = hashVal.mod(len).intValue();
+
+        while (hashTable[index] != null) {
+            if (!hashTable[index].isDeleted() && hashTable[index].getKey().equals(key)) {
+                return true;
+            }
+            index = (index + 1) % hashTable.length;
+        }
         return false;
     }
 
@@ -46,13 +60,23 @@ public class HashTableClosedHashingLP implements Map {
         BigInteger len = new BigInteger(String.valueOf(hashTable.length));
         int index = hashVal.mod(len).intValue();
 
+        int firstDeletedIndex = -1;
         while (hashTable[index] != null && !hashTable[index].getKey().equals(key)) {
+            if (hashTable[index].isDeleted() && firstDeletedIndex == -1) {
+                firstDeletedIndex = index;
+            }
             index = (index + 1) % hashTable.length;
         }
-        if (hashTable[index] == null) {
+
+        if (hashTable[index] == null || hashTable[index].isDeleted()) {
+            if (firstDeletedIndex != -1) {
+                index = firstDeletedIndex;
+            }
             numEntries++;
         }
+
         hashTable[index] = new HashEntry(key, value);
+        hashTable[index].setDeleted(false);
     }
 
     /** Return the value associated with the given key or null, if the map does not contain the key.
@@ -87,7 +111,22 @@ public class HashTableClosedHashingLP implements Map {
      */
     public Object remove(String key) {
         // FILL IN CODE
+        if (key == null) {
+            throw new IllegalArgumentException("Invalid key");
+        }
+        BigInteger hashVal = polyHash(key);
+        BigInteger len = new BigInteger(String.valueOf(hashTable.length));
+        int index = hashVal.mod(len).intValue();
 
+        for (int i = 0; i < hashTable.length; i++) {
+            if (hashTable[index] != null && !hashTable[index].isDeleted() && hashTable[index].getKey().equals(key)) {
+                Object prevValue = hashTable[index].getValue();
+                hashTable[index].setDeleted(true);
+                numEntries--;
+                return prevValue;
+            }
+            index = (index + 1) % hashTable.length;
+        }
         return null;
     }
 
@@ -97,14 +136,24 @@ public class HashTableClosedHashingLP implements Map {
      */
     public int size() {
         // FILL IN CODE
-
-        return 0;
+        return numEntries;
     }
 
     public String toString() {
         // FILL IN CODE
-
-        return "";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < hashTable.length; i++) {
+            sb.append(i).append(": ");
+            if (hashTable[i] == null) {
+                sb.append("null");
+            } else {
+                sb.append("(").append(hashTable[i].getKey()).append(", ")
+                        .append(hashTable[i].getValue()).append(", ")
+                        .append(hashTable[i].isDeleted()).append(")");
+            }
+            sb.append(System.lineSeparator());
+        }
+        return sb.toString();
     }
 
     // Add may implement other helper methods as needed
