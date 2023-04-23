@@ -1,5 +1,7 @@
 package map;
 
+import java.math.BigInteger;
+
 /** The class that implements the Map interface using closed hashing;
  *  uses linear probing to resolve collisions */
 public class HashTableClosedHashingLP implements Map {
@@ -34,6 +36,23 @@ public class HashTableClosedHashingLP implements Map {
      */
     public void put(String key, Object value) {
         // FILL IN CODE
+        if (key == null) {
+            throw new IllegalArgumentException("Invalid key");
+        }
+        if ((double) numEntries / hashTable.length > 0.6) {
+            rehash();
+        }
+        BigInteger hashVal = polyHash(key);
+        BigInteger len = new BigInteger(String.valueOf(hashTable.length));
+        int index = hashVal.mod(len).intValue();
+
+        while (hashTable[index] != null && !hashTable[index].getKey().equals(key)) {
+            index = (index + 1) % hashTable.length;
+        }
+        if (hashTable[index] == null) {
+            numEntries++;
+        }
+        hashTable[index] = new HashEntry(key, value);
     }
 
     /** Return the value associated with the given key or null, if the map does not contain the key.
@@ -44,8 +63,21 @@ public class HashTableClosedHashingLP implements Map {
      */
     public Object get(String key) {
         // FILL IN CODE
+        if (key == null) {
+            throw new IllegalArgumentException("Invalid key");
+        }
+        BigInteger hashVal = polyHash(key);
+        BigInteger len = new BigInteger(String.valueOf(hashTable.length));
+        int index = hashVal.mod(len).intValue();
 
+        for (int i = 0; i < hashTable.length; i++) {
+            if (hashTable[index] != null && !hashTable[index].isDeleted() && hashTable[index].getKey().equals(key)) {
+                return hashTable[index].getValue();
+            }
+            index = (index + 1) % hashTable.length;
+        }
         return null;
+
     }
 
     /** Remove a (key, value) entry if it exists.
@@ -76,4 +108,50 @@ public class HashTableClosedHashingLP implements Map {
     }
 
     // Add may implement other helper methods as needed
+    /* Polynomial hash helper method */
+    private BigInteger polyHash(String key) {
+        int degree = key.length() - 1;
+        int a = 33; // other good values are 37, 39
+        BigInteger res = BigInteger.valueOf(0);
+        for (int i = 0; i < key.length(); i++) {
+            BigInteger temp = BigInteger.valueOf(key.charAt(i));
+            BigInteger power = BigInteger.valueOf(a).pow(degree);
+            res = res.add(temp.multiply(power));
+            degree--;
+        }
+        return res;
+    }
+    private void rehash() {
+        int newSize = nextPrime(2 * hashTable.length);
+        HashEntry[] oldHashTable = hashTable;
+        hashTable = new HashEntry[newSize];
+        numEntries = 0;
+
+        for (HashEntry entry : oldHashTable) {
+            if (entry != null && !entry.isDeleted()) {
+                put(entry.getKey(), entry.getValue());
+            }
+        }
+    }
+
+    private int nextPrime(int num) {
+        while (!isPrime(num)) {
+            num++;
+        }
+        return num;
+    }
+
+    private boolean isPrime(int num) {
+        if (num <= 1) {
+            return false;
+        }
+        for (int i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 }
