@@ -7,6 +7,8 @@ import java.math.BigInteger;
 
 public class HashTableOpenHashingTest extends TestCase {
 
+
+// need to make method public to test
 //    @Test
 //    public void testPolyHash() {
 //        String key1 = "hello";

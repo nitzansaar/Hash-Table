@@ -10,10 +10,12 @@ public class HashTableOpenHashing implements Map {
         this.hashTable = new LinkedList[n];
         this.numEntries = 0;
     }
-    /** Return true if the map contains a (key, value) pair associated with this key,
-     *  otherwise return false.
+
+    /**
+     * Return true if the map contains a (key, value) pair associated with this key,
+     * otherwise return false.
      *
-     * @param key  key
+     * @param key key
      * @return true if the key (and the corresponding value) is the in map
      */
     public boolean containsKey(String key) {
@@ -39,7 +41,8 @@ public class HashTableOpenHashing implements Map {
         return false;
     }
 
-    /** Add (key, value) to the map.
+    /**
+     * Add (key, value) to the map.
      * Will replace previous value that this key was mapped to.
      * If key is null, throw IllegalArgumentException.
      *
@@ -99,7 +102,8 @@ new array whose size is the smallest prime number that is larger than 2*max_size
     }
 
 
-    /** Return the value associated with the given key or null, if the map does not contain the key.
+    /**
+     * Return the value associated with the given key or null, if the map does not contain the key.
      * If the key is null, throw IllegalArgumentException.
      *
      * @param key key
@@ -128,8 +132,10 @@ new array whose size is the smallest prime number that is larger than 2*max_size
         return null;
     }
 
-    /** Remove a (key, value) entry if it exists.
+    /**
+     * Remove a (key, value) entry if it exists.
      * Return the previous value associated with the given key, otherwise return null
+     *
      * @param key key
      * @return previous value
      */
@@ -165,7 +171,8 @@ new array whose size is the smallest prime number that is larger than 2*max_size
         return null;
     }
 
-    /** Return the actual number of elements in the map.
+    /**
+     * Return the actual number of elements in the map.
      *
      * @return number of elements currently in the map.
      */
@@ -208,6 +215,7 @@ new array whose size is the smallest prime number that is larger than 2*max_size
         }
         return res;
     }
+
     private int nextPrime(int num) {
         while (!isPrime(num)) {
             num++;
