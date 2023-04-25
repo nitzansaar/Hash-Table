@@ -3,12 +3,10 @@ package map;
 import java.math.BigInteger;
 
 public class HashTableOpenHashing implements Map {
-    // Add instance variables -
     private LinkedList<HashEntry>[] hashTable; // array of linked-lists
     private int numEntries; // number of entries in hashTable
 
     public HashTableOpenHashing(int n) {
-        // FILL IN CODE
         this.hashTable = new LinkedList[n];
         this.numEntries = 0;
     }
@@ -19,7 +17,6 @@ public class HashTableOpenHashing implements Map {
      * @return true if the key (and the corresponding value) is the in map
      */
     public boolean containsKey(String key) {
-        // FILL IN CODE
         if (key == null) {
             throw new IllegalArgumentException("Invalid key");
         }
@@ -109,7 +106,6 @@ new array whose size is the smallest prime number that is larger than 2*max_size
      * @return value associated value
      */
     public Object get(String key) {
-        // FILL IN CODE
         if (key == null) {
             throw new IllegalArgumentException("Invalid key");
         }
@@ -138,7 +134,6 @@ new array whose size is the smallest prime number that is larger than 2*max_size
      * @return previous value
      */
     public Object remove(String key) {
-        // FILL IN CODE
         if (key == null) {
             throw new IllegalArgumentException("Invalid key");
         }
@@ -175,12 +170,10 @@ new array whose size is the smallest prime number that is larger than 2*max_size
      * @return number of elements currently in the map.
      */
     public int size() {
-        // FILL IN CODE
         return numEntries;
     }
 
     public String toString() {
-        // FILL IN CODE
         StringBuilder sb = new StringBuilder();
         // go through the hashTable and append each hashEntry to sb
         for (int i = 0; i < hashTable.length; i++) {
@@ -201,8 +194,6 @@ new array whose size is the smallest prime number that is larger than 2*max_size
         }
         return sb.toString();
     }
-
-    // Add may implement other helper methods as needed
 
     /* Polynomial hash helper method */
     private BigInteger polyHash(String key) {

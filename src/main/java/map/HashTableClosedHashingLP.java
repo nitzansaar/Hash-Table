@@ -5,12 +5,10 @@ import java.math.BigInteger;
 /** The class that implements the Map interface using closed hashing;
  *  uses linear probing to resolve collisions */
 public class HashTableClosedHashingLP implements Map {
-    // Add instance variables - TODO
     private int numEntries;
     private HashEntry[] hashTable;
 
     public HashTableClosedHashingLP(int n) {
-        // FILL IN CODE
         this.hashTable = new HashEntry[n];
         this.numEntries = 0;
 
@@ -23,7 +21,6 @@ public class HashTableClosedHashingLP implements Map {
      * @return true if the key (and the corresponding value) is the in map
      */
     public boolean containsKey(String key) {
-        // FILL IN CODE
         if (key == null) {
             throw new IllegalArgumentException("Invalid key");
         }
@@ -49,7 +46,6 @@ public class HashTableClosedHashingLP implements Map {
      * @param value associated value
      */
     public void put(String key, Object value) {
-        // FILL IN CODE
         if (key == null) {
             throw new IllegalArgumentException("Invalid key");
         }
@@ -58,26 +54,20 @@ public class HashTableClosedHashingLP implements Map {
         }
         BigInteger hashVal = polyHash(key);
         BigInteger len = new BigInteger(String.valueOf(hashTable.length));
+
         int index = hashVal.mod(len).intValue();
-
-        int firstDeletedIndex = -1;
-        while (hashTable[index] != null && !hashTable[index].getKey().equals(key)) {
-            if (hashTable[index].isDeleted() && firstDeletedIndex == -1) {
-                firstDeletedIndex = index;
+        while (true) {
+            if (hashTable[index] == null || hashTable[index].isDeleted()) {
+                hashTable[index] = new HashEntry(key, value);
+                hashTable[index].setDeleted(false);
+                numEntries++;
+                break;
+            } else {
+                index = (index + 1) % hashTable.length;
             }
-            index = (index + 1) % hashTable.length;
         }
-
-        if (hashTable[index] == null || hashTable[index].isDeleted()) {
-            if (firstDeletedIndex != -1) {
-                index = firstDeletedIndex;
-            }
-            numEntries++;
-        }
-
-        hashTable[index] = new HashEntry(key, value);
-        hashTable[index].setDeleted(false);
     }
+
 
     /** Return the value associated with the given key or null, if the map does not contain the key.
      * If the key is null, throw IllegalArgumentException.
@@ -86,7 +76,6 @@ public class HashTableClosedHashingLP implements Map {
      * @return value associated value
      */
     public Object get(String key) {
-        // FILL IN CODE
         if (key == null) {
             throw new IllegalArgumentException("Invalid key");
         }
@@ -110,7 +99,6 @@ public class HashTableClosedHashingLP implements Map {
      * @return previous value
      */
     public Object remove(String key) {
-        // FILL IN CODE
         if (key == null) {
             throw new IllegalArgumentException("Invalid key");
         }
@@ -135,12 +123,10 @@ public class HashTableClosedHashingLP implements Map {
      * @return number of elements currently in the map.
      */
     public int size() {
-        // FILL IN CODE
         return numEntries;
     }
 
     public String toString() {
-        // FILL IN CODE
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < hashTable.length; i++) {
             sb.append(i).append(": ");
