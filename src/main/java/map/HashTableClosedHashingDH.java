@@ -9,14 +9,14 @@ import java.math.BigInteger;
 public class HashTableClosedHashingDH implements Map {
     private HashEntry[] hashTable;
     private int numEntries;
-    private int maxSize;
-    private int q;
+    private final int MAX_SIZE;
+    private final int Q;
 
     public HashTableClosedHashingDH(int n) {
-        maxSize = n;
-        hashTable = new HashEntry[maxSize];
+        MAX_SIZE = n;
+        hashTable = new HashEntry[MAX_SIZE];
         numEntries = 0;
-        q = nextPrime((int) Math.ceil(maxSize / 2.0));
+        Q = nextPrime((int) Math.ceil(MAX_SIZE / 2.0));
     }
 
     /**
@@ -31,11 +31,11 @@ public class HashTableClosedHashingDH implements Map {
             throw new IllegalArgumentException("Invalid key");
         }
         BigInteger hashVal = polyHash(key);
-        BigInteger len = new BigInteger(String.valueOf(maxSize));
+        BigInteger len = new BigInteger(String.valueOf(MAX_SIZE));
         int hK = hashVal.mod(len).intValue();
-        int dK = q - (hashVal.mod(BigInteger.valueOf(q)).intValue());
+        int dK = Q - (hashVal.mod(BigInteger.valueOf(Q)).intValue());
 
-        for (int i = 1; i < maxSize; i++) {
+        for (int i = 1; i < MAX_SIZE; i++) {
             if (hashTable[hK] == null) {
                 return false;
             } else if (!hashTable[hK].isDeleted() && hashTable[hK].getKey().equals(key)) {
@@ -62,11 +62,11 @@ public class HashTableClosedHashingDH implements Map {
             rehash();
         }
         BigInteger hashVal = polyHash(key);
-        BigInteger len = new BigInteger(String.valueOf(maxSize));
+        BigInteger len = new BigInteger(String.valueOf(MAX_SIZE));
         int hK = hashVal.mod(len).intValue();
-        int dK = q - (hashVal.mod(BigInteger.valueOf(q)).intValue());
+        int dK = Q - (hashVal.mod(BigInteger.valueOf(Q)).intValue());
         for (int i = 1; hashTable[hK] != null; i++) {
-            hK = (hK + (i * dK)) % maxSize;
+            hK = (hK + (i * dK)) % MAX_SIZE;
         }
         numEntries++;
         hashTable[hK] = new HashEntry(key, value);
@@ -85,11 +85,11 @@ public class HashTableClosedHashingDH implements Map {
             throw new IllegalArgumentException("Invalid key");
         }
         BigInteger hashVal = polyHash(key);
-        BigInteger len = new BigInteger(String.valueOf(maxSize));
+        BigInteger len = new BigInteger(String.valueOf(MAX_SIZE));
         int hK = hashVal.mod(len).intValue();
-        int dK = q - (hashVal.mod(BigInteger.valueOf(q)).intValue());
+        int dK = Q - (hashVal.mod(BigInteger.valueOf(Q)).intValue());
 
-        for (int i = 1; i < maxSize; i++) {
+        for (int i = 1; i < MAX_SIZE; i++) {
             if (hashTable[hK] == null) {
                 return null;
             } else if (!hashTable[hK].isDeleted() && hashTable[hK].getKey().equals(key)) {
@@ -112,11 +112,11 @@ public class HashTableClosedHashingDH implements Map {
             throw new IllegalArgumentException("Invalid key");
         }
         BigInteger hashVal = polyHash(key);
-        BigInteger len = new BigInteger(String.valueOf(maxSize));
+        BigInteger len = new BigInteger(String.valueOf(MAX_SIZE));
         int hK = hashVal.mod(len).intValue();
-        int dK = q - (hashVal.mod(BigInteger.valueOf(q)).intValue());
+        int dK = Q - (hashVal.mod(BigInteger.valueOf(Q)).intValue());
 
-        for (int i = 1; i < maxSize; i++) {
+        for (int i = 1; i < MAX_SIZE; i++) {
             if (hashTable[hK] == null) {
                 return null;
             } else if (!hashTable[hK].isDeleted() && hashTable[hK].getKey().equals(key)) {
@@ -125,7 +125,7 @@ public class HashTableClosedHashingDH implements Map {
                 numEntries--;
                 return oldValue;
             }
-            hK = (hK + (i * dK)) % maxSize;
+            hK = (hK + (i * dK)) % MAX_SIZE;
         }
         return null;
     }
@@ -141,7 +141,7 @@ public class HashTableClosedHashingDH implements Map {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < maxSize; i++) {
+        for (int i = 0; i < MAX_SIZE; i++) {
             sb.append(i).append(": ");
             if (hashTable[i] == null) {
                 sb.append("null");

@@ -8,7 +8,6 @@ package map;
  */
 public class LinkedList<Type> {
 
-    // FILL IN CODE
     public class Node {
         Type value;
         Node next = null;
